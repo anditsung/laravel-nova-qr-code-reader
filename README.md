@@ -7,8 +7,11 @@ using packagist
 ```
 composer require tsungsoft/qr-code-reader
 ```
-using github repository
+using github repository add this on composer.json
 ```
+"require": {
+    "tsungsoft/qr-code-reader": "*"
+}
 "repositories": [
     {
         "type": "vcs",
