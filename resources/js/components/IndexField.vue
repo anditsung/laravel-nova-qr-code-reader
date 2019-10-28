@@ -1,6 +1,23 @@
 <template>
     <span>
-        <vue-q-r-code-component v-if="field.value" :text="field.value" :size="30"></vue-q-r-code-component>
+        <span v-if="field.viewable && field.value">
+            <router-link
+                :to="{
+                        name: 'detail',
+                        params: {
+                            resourceName: field.resourceName,
+                            resourceId: field.belongsToId,
+                        },
+                    }"
+                class="no-underline dim text-primary font-bold"
+            >
+                <vue-q-r-code-component v-if="field.value" :text="field.value" :size="30"></vue-q-r-code-component>
+            </router-link>
+        </span>
+        <span v-else-if="field.value">
+            <vue-q-r-code-component v-if="field.value" :text="field.value" :size="30"></vue-q-r-code-component>
+        </span>
+        <span v-else>-</span>
     </span>
 </template>
 

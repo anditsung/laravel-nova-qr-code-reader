@@ -2,7 +2,7 @@
     <default-field :field="field" :errors="errors">
         <template slot="field">
             <div class="flex">
-                <vue-q-r-code-component v-if="canInput" :text="value" :size="qrSize"></vue-q-r-code-component>
+                <vue-q-r-code-component v-if="canInput" v-show="value" :text="value" :size="qrSize"></vue-q-r-code-component>
                 <div v-else>
                     <input
                         :id="field.name"
