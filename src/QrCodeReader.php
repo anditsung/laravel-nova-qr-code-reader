@@ -98,22 +98,6 @@ class QrCodeReader extends Field implements RelatableField
     }
 
     /**
-     * Specify if the related resource can be viewed.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function viewable($value = true)
-    {
-        if(!$this->relationship) {
-            $value = false;
-        }
-        $this->viewable = $value;
-
-        return $this;
-    }
-
-    /**
      * Resolve the field's value.
      *
      * @param  mixed  $resource
@@ -151,6 +135,8 @@ class QrCodeReader extends Field implements RelatableField
 
             if($value) {
                 $this->value = $value;
+
+                $this->viewable = false;
             }
         }
     }
@@ -162,20 +148,20 @@ class QrCodeReader extends Field implements RelatableField
      */
     public function meta()
     {
-        if($this->relationship) {
+        if(!$this->relationship) {
             return array_merge([
-                'resourceName' => $this->resourceName,
-                'label' => forward_static_call([$this->resourceClass, 'label']),
-                'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
-                'belongsToRelationship' => $this->belongsToRelationship,
-                'belongsToId' => $this->belongsToId,
                 'viewable' => $this->viewable,
-                'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
             ], $this->meta);
         }
         return array_merge([
+            'resourceName' => $this->resourceName,
+            'label' => forward_static_call([$this->resourceClass, 'label']),
+            'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
+            'belongsToRelationship' => $this->belongsToRelationship,
+            'belongsToId' => $this->belongsToId,
             'viewable' => $this->viewable,
-        ]);
+            'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
+        ], $this->meta);
     }
 
     public function canSubmit($canSubmit = false)
