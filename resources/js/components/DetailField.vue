@@ -6,7 +6,23 @@
             </slot>
         </div>
         <div class="w-3/4 py-4 break-words">
-            <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSize"></vue-q-r-code-component>
+            <router-link
+                v-if="field.viewable && field.value"
+                :to="{
+                    name: 'detail',
+                    params: {
+                        resourceName: field.resourceName,
+                        resourceId: field.belongsToId,
+                    },
+                }"
+                class="no-underline font-bold dim text-primary"
+            >
+                <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSize"></vue-q-r-code-component>
+            </router-link>
+            <p v-else-if="field.value">
+                <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSize"></vue-q-r-code-component>
+            </p>
+            <p v-else>&mdash;</p>
         </div>
     </div>
 </template>

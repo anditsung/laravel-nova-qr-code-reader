@@ -2,17 +2,12 @@
 
 namespace Tsungsoft\QrCodeReader;
 
-use Closure;
-use Illuminate\Http\Request;
 use Laravel\Nova\Contracts\RelatableField;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\FormatsRelatableDisplayValues;
 use Laravel\Nova\Fields\ResolvesReverseRelation;
 use Laravel\Nova\Fields\ResourceRelationshipGuesser;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Nova;
-use Laravel\Nova\Resource;
 
 class QrCodeReader extends Field implements RelatableField
 {
@@ -31,7 +26,14 @@ class QrCodeReader extends Field implements RelatableField
      *
      * @var boolean
      */
-    public $relationship;
+    public $relationship = false;
+
+    /**
+     * The field's resource
+     *
+     * @var string
+     */
+    public $resource;
 
     /**
      * The class name of the related resource.
@@ -79,21 +81,20 @@ class QrCodeReader extends Field implements RelatableField
      * Create a new field.
      *
      * @param string $name
-     * @param bool $relationship
      * @param string|null $attribute
      * @param string|null $resource
      */
-    public function __construct($name, $relationship = false, $attribute = null, $resource = null)
+    public function __construct($name, $attribute = null, $resource = null)
     {
         parent::__construct($name, $attribute);
 
-        $this->relationship = $relationship;
-
-        if($relationship) {
-            $resource = $resource ?? ResourceRelationshipGuesser::guessResource($name);
+        $resource = $resource ?? ResourceRelationshipGuesser::guessResource($name);
+        if(class_exists($resource)) {
             $this->resourceClass = $resource;
             $this->resourceName = $resource::uriKey();
             $this->belongsToRelationship = $this->attribute;
+
+            $this->relationship = true;
         }
     }
 
@@ -114,28 +115,30 @@ class QrCodeReader extends Field implements RelatableField
             }
 
             if (! $value) {
-                $value = $resource->{$this->attribute}()->withoutGlobalScopes()->getResults();
+                // bikin relation dari column yang disave
+                // tidak boleh diganti karena akan digunakan untuk penyimpanan data
+                $index = strpos($this->attribute, '_id');
+                if($index > 0) {
+                    $relationshipName = substr($this->attribute, 0, $index);
+                }
+                // relation dari nama table jika ada
+                //$value = $resource->{$this->name}()->withoutGlobalScopes()->getResults();
+                $value = $resource->{$relationshipName}()->withoutGlobalScopes()->getResults();
             }
 
             if ($value) {
                 $this->belongsToId = $value->getKey();
-
                 $resource = new $this->resourceClass($value);
-
                 $this->value = $this->formatDisplayValue($resource);
-
-                $this->viewable = $this->viewable
-                    && $resource->authorizedToView(request());
+                $this->viewable = $this->viewable && $resource->authorizedToView(request());
             }
         }
         else {
             if(! $value) {
                 $value = $resource->{$this->attribute};
             }
-
             if($value) {
                 $this->value = $value;
-
                 $this->viewable = false;
             }
         }
