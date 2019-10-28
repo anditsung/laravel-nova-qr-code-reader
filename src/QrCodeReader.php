@@ -78,10 +78,10 @@ class QrCodeReader extends Field implements RelatableField
     /**
      * Create a new field.
      *
-     * @param  string  $name
-     * @param  string|null  $attribute
-     * @param  string|null  $resource
-     * @return void
+     * @param string $name
+     * @param bool $relationship
+     * @param string|null $attribute
+     * @param string|null $resource
      */
     public function __construct($name, $relationship = false, $attribute = null, $resource = null)
     {
