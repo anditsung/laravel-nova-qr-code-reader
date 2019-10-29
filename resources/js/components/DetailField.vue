@@ -17,12 +17,25 @@
                 }"
                 class="no-underline font-bold dim text-primary"
             >
-                <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSize"></vue-q-r-code-component>
+                <div class="flex">
+                    <div>
+                        <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSizeDetail"></vue-q-r-code-component>
+                    </div>
+                    <div class="ml-3" v-show="displayValue">
+                        {{ fieldValue }}
+                    </div>
+                </div>
+
             </router-link>
-            <p v-else-if="field.value">
-                <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSize"></vue-q-r-code-component>
-            </p>
-            <p v-else>&mdash;</p>
+            <div v-else-if="field.value" class="flex">
+                <div>
+                    <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSizeDetail"></vue-q-r-code-component>
+                </div>
+                <div class="ml-3" v-show="displayValue">
+                    {{ fieldValue }}
+                </div>
+            </div>
+            <div v-else>&mdash;</div>
         </div>
     </div>
 </template>
@@ -38,7 +51,8 @@
 
         data() {
             return {
-                qrSize: this.field.qrSize
+                qrSizeDetail: this.field.qrSizeDetail,
+                displayValue: this.field.displayValue,
             }
         },
 

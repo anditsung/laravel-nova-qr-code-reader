@@ -78,6 +78,13 @@ class QrCodeReader extends Field implements RelatableField
     public $viewable = true;
 
     /**
+     * display the value
+     *
+     * @var bool
+     */
+    public $displayValue = false;
+
+    /**
      * Create a new field.
      *
      * @param string $name
@@ -117,12 +124,14 @@ class QrCodeReader extends Field implements RelatableField
             if (! $value) {
                 // bikin relation dari column yang disave
                 // tidak boleh diganti karena akan digunakan untuk penyimpanan data
+
                 $index = strpos($this->attribute, '_id');
                 if($index > 0) {
                     $relationshipName = substr($this->attribute, 0, $index);
                 }
-                // relation dari nama table jika ada
-                //$value = $resource->{$this->name}()->withoutGlobalScopes()->getResults();
+                else {
+                    $relationshipName = $this->attribute;
+                }
                 $value = $resource->{$relationshipName}()->withoutGlobalScopes()->getResults();
             }
 
@@ -177,8 +186,53 @@ class QrCodeReader extends Field implements RelatableField
         return $this->withMeta(['canInput' => $canInput]);
     }
 
-    public function qrSize($size = 200)
+    public function qrSizeIndex($qrSizeIndex = 30)
     {
-        return $this->withMeta(['qrSize' => $size]);
+        return $this->withMeta(['qrSizeIndex' => $qrSizeIndex]);
+    }
+
+    public function qrSizeDetail($qrSizeDetail = 100)
+    {
+        return $this->withMeta(['qrSizeDetail' => $qrSizeDetail]);
+    }
+
+    public function qrSizeForm($qrSizeForm = 50)
+    {
+        return $this->withMeta(['qrSizeForm' => $qrSizeForm]);
+    }
+
+    public function displayValue($displayValue = true)
+    {
+        return $this->withMeta(['displayValue' => $displayValue]);
+    }
+
+    /**
+     * Prepare the field for JSON serialization.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return array_merge([
+            'component' => $this->component(),
+            'prefixComponent' => true,
+            'indexName' => $this->name,
+            'name' => $this->name,
+            'attribute' => $this->attribute,
+            'value' => $this->value,
+            'panel' => $this->panel,
+            'sortable' => $this->sortable,
+            'nullable' => $this->nullable,
+            'readonly' => $this->isReadonly(app(NovaRequest::class)),
+            'required' => $this->isRequired(app(NovaRequest::class)),
+            'textAlign' => $this->textAlign,
+            'sortableUriKey' => $this->sortableUriKey(),
+            'stacked' => $this->stacked,
+            'qrSizeIndex' => 30,
+            'qrSizeDetail' => 100,
+            'qrSizeForm' => 100,
+            'canSubmit' => false,
+            'canInput' => false,
+        ], $this->meta());
     }
 }

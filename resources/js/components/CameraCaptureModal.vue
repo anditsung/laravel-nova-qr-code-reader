@@ -27,7 +27,12 @@
                 </div>
                 <div class="border-b border-40">
                     <div class="py-6 px-8 w-full">
-                        <qrcode-stream @decode="onDecode"></qrcode-stream>
+                        <span v-if="cameraError">
+                            <div class="help-text error-text mt-2 text-danger" v-if="cameraError">
+                                {{ __(this.cameraErrorMessage) }}
+                            </div>
+                        </span>
+                        <qrcode-stream v-else @init="onInit" @decode="onDecode"></qrcode-stream>
                     </div>
                 </div>
             </div>
@@ -75,11 +80,43 @@
                 code: "",
                 showInput: false,
                 hasError: false,
-                errorMessage: ''
+                errorMessage: '',
+                cameraError: false,
+                cameraErrorMessage: ''
             }
         },
 
         methods: {
+            async onInit(promise) {
+                try {
+                    await promise
+                } catch(error) {
+                    this.cameraError = true
+                    switch (error.name) {
+                        case "NotAllowedError":
+                            this.cameraErrorMessage = "User denied camera access permissions"
+                            break;
+                        case "NotFoundError":
+                            this.cameraErrorMessage = "No suitable camera device installed"
+                            break;
+                        case "NotSupportedError":
+                            this.cameraErrorMessage = "Page is not served over HTTPS (or localhost)"
+                            break;
+                        case "NotReadableError":
+                            this.cameraErrorMessage = "Maybe camera is already in use"
+                            break;
+                        case "OverconstrainedError":
+                            this.cameraErrorMessage = "Did you requested the front camera although there is none?"
+                            break;
+                        case "StreamApiNotSupportedError":
+                            this.cameraErrorMessage = "Browser seems to be lacking features"
+                            break;
+                        default:
+                            this.cameraErrorMessage = "Unknown Error"
+                            break;
+                    }
+                }
+            },
 
             onDecode(decodedString) {
                 this.code = decodedString

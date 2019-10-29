@@ -2,7 +2,7 @@
     <default-field :field="field" :errors="errors">
         <template slot="field">
             <div class="flex">
-                <vue-q-r-code-component v-if="canInput" v-show="value" :text="value" :size="qrSize"></vue-q-r-code-component>
+                <vue-q-r-code-component v-if="canInput" v-show="value" :text="value" :size="qrSizeForm"></vue-q-r-code-component>
                 <div v-else>
                     <input
                         :id="field.name"
@@ -13,7 +13,6 @@
                         v-model="value"
                     />
                 </div>
-
                 <button class="btn btn-default btn-primary ml-3" @click.prevent="showModal = true">{{ __('Scan') }}</button>
             </div>
             <camera-capture-modal :showSubmit="showSubmit" v-if="showModal" @close="showModal = false" @decoded="scanData"></camera-capture-modal>
@@ -38,7 +37,7 @@
                 showModal: false,
                 showSubmit: this.field.canSubmit,
                 canInput: !this.field.canInput,
-                qrSize: this.field.qrSize
+                qrSizeForm: this.field.qrSizeForm,
             }
         },
 
