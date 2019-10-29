@@ -221,6 +221,13 @@ class QrCodeReader extends Field implements RelatableField
         return $this;
     }
 
+    public function viewable($viewable = true)
+    {
+        $this->viewable = $viewable;
+
+        return $this;
+    }
+
     /**
      * Prepare the field for JSON serialization.
      *
