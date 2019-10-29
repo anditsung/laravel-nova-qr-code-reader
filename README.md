@@ -38,8 +38,8 @@ public function fields(Request $request)
             ->displayValue()                    // display value beside qr code on detail view, default false
             ->qrSizeIndex()                     // set qr size on index, default 30
             ->qrSizeDetail()                    // set qr size on detail, default 100
-            ->qrSizeForm(),                     // set qr size on form, default 50
-            
+            ->qrSizeForm()                      // set qr size on form, default 50
+            ->viewable(),                       // set viewable if has belongto value, default true
         ...
     ];
 }
