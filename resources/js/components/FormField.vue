@@ -2,7 +2,7 @@
     <default-field :field="field" :errors="errors">
         <template slot="field">
             <div class="flex">
-                <vue-q-r-code-component v-if="canInput" v-show="value" :text="value" :size="qrSizeForm"></vue-q-r-code-component>
+                <vue-q-r-code-component v-if="!canInput" v-show="value" :text="value" :size="qrSizeForm"></vue-q-r-code-component>
                 <div v-else>
                     <input
                         :id="field.name"
@@ -36,7 +36,7 @@
             return {
                 showModal: false,
                 showSubmit: this.field.canSubmit,
-                canInput: !this.field.canInput,
+                canInput: this.field.canInput,
                 qrSizeForm: this.field.qrSizeForm,
             }
         },

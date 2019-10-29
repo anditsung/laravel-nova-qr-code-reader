@@ -78,11 +78,14 @@ class QrCodeReader extends Field implements RelatableField
     public $viewable = true;
 
     /**
-     * display the value
-     *
-     * @var bool
+     * default value for this field
      */
-    public $displayValue = false;
+    public $canSubmit = false;
+    public $canInput = false;
+    public $qrSizeIndex = 30;
+    public $qrSizeDetail = 100;
+    public $qrSizeForm = 50;
+    public $displayValue = true;
 
     /**
      * Create a new field.
@@ -176,34 +179,46 @@ class QrCodeReader extends Field implements RelatableField
         ], $this->meta);
     }
 
-    public function canSubmit($canSubmit = false)
+    public function canSubmit($canSubmit = true)
     {
-        return $this->withMeta(['canSubmit' => $canSubmit]);
+        $this->canSubmit = $canSubmit;
+
+        return $this;
     }
 
-    public function canInput($canInput = false)
+    public function canInput($canInput = true)
     {
-        return $this->withMeta(['canInput' => $canInput]);
+        $this->canInput = $canInput;
+
+        return $this;
     }
 
     public function qrSizeIndex($qrSizeIndex = 30)
     {
-        return $this->withMeta(['qrSizeIndex' => $qrSizeIndex]);
+        $this->qrSizeIndex = $qrSizeIndex;
+
+        return $this;
     }
 
     public function qrSizeDetail($qrSizeDetail = 100)
     {
-        return $this->withMeta(['qrSizeDetail' => $qrSizeDetail]);
+        $this->qrSizeDetail = $qrSizeDetail;
+
+        return $this;
     }
 
     public function qrSizeForm($qrSizeForm = 50)
     {
-        return $this->withMeta(['qrSizeForm' => $qrSizeForm]);
+        $this->qrSizeForm = $qrSizeForm;
+
+        return $this;
     }
 
     public function displayValue($displayValue = true)
     {
-        return $this->withMeta(['displayValue' => $displayValue]);
+        $this->displayValue = $displayValue;
+
+        return $this;
     }
 
     /**
@@ -213,26 +228,13 @@ class QrCodeReader extends Field implements RelatableField
      */
     public function jsonSerialize()
     {
-        return array_merge([
-            'component' => $this->component(),
-            'prefixComponent' => true,
-            'indexName' => $this->name,
-            'name' => $this->name,
-            'attribute' => $this->attribute,
-            'value' => $this->value,
-            'panel' => $this->panel,
-            'sortable' => $this->sortable,
-            'nullable' => $this->nullable,
-            'readonly' => $this->isReadonly(app(NovaRequest::class)),
-            'required' => $this->isRequired(app(NovaRequest::class)),
-            'textAlign' => $this->textAlign,
-            'sortableUriKey' => $this->sortableUriKey(),
-            'stacked' => $this->stacked,
-            'qrSizeIndex' => 30,
-            'qrSizeDetail' => 100,
-            'qrSizeForm' => 100,
-            'canSubmit' => false,
-            'canInput' => false,
-        ], $this->meta());
+        return array_merge(parent::jsonSerialize(), [
+            'qrSizeIndex' => $this->qrSizeIndex,
+            'qrSizeDetail' => $this->qrSizeDetail,
+            'qrSizeForm' => $this->qrSizeForm,
+            'canSubmit' => $this->canSubmit,
+            'canInput' => $this->canInput,
+            'displayValue' => $this->displayValue,
+        ]);
     }
 }
