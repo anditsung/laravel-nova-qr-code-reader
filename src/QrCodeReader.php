@@ -22,13 +22,6 @@ class QrCodeReader extends Field implements RelatableField
     public $component = 'qr-code-reader';
 
     /**
-     * The field's relationship status
-     *
-     * @var boolean
-     */
-    public $relationship = false;
-
-    /**
      * The field's resource
      *
      * @var string
@@ -86,6 +79,7 @@ class QrCodeReader extends Field implements RelatableField
     public $qrSizeDetail = 100;
     public $qrSizeForm = 50;
     public $displayValue = true;
+    public $relationship = false;
 
     /**
      * Create a new field.
