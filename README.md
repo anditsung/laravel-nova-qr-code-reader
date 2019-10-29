@@ -25,17 +25,24 @@ using github repository add this on composer.json
 ```
 use Tsungsoft\QrCodeReader\QrCodeReader;
 
+...
+
 public function fields(Request $request)
 {
     return [
         ...
 
-        QrCodeReader::make('Name')
-            ->canInput(true) // the user able to input the code using keyboard
-            ->canSubmit(true) // on modal scan need to click submit to send the code to the input value
-            ->qrSize(100), // the size of the qr code
-
+        QrCodeReader::make('Name', 'name_id')   // Name -> label name, name_id -> save to column
+            ->canInput()                        // the user able to input the code using keyboard, default false
+            ->canSubmit()                       // on modal scan need to click submit to send the code to the input value, default false
+            ->displayValue()                    // display value beside qr code on detail view, default false
+            ->qrSizeIndex()                     // set qr size on index, default 30
+            ->qrSizeDetail()                    // set qr size on detail, default 100
+            ->qrSizeForm(),                     // set qr size on form, default 50
+            
         ...
     ];
 }
+
+...
 ```
