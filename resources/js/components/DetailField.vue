@@ -6,27 +6,24 @@
             </slot>
         </div>
         <div class="w-3/4 py-4 break-words">
-            <router-link
-                v-if="field.viewable && field.value"
-                :to="{
-                    name: 'detail',
-                    params: {
-                        resourceName: field.resourceName,
-                        resourceId: field.belongsToId,
-                    },
-                }"
-                class="no-underline font-bold dim text-primary"
-            >
-                <div class="flex">
-                    <div>
-                        <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSizeDetail"></vue-q-r-code-component>
-                    </div>
-                    <div class="ml-3" v-show="displayValue">
-                        {{ fieldValue }}
-                    </div>
+            <div class='flex' v-if="field.viewable && field.value">
+                <router-link
+                    v-if="field.viewable && field.value"
+                    :to="{
+                        name: 'detail',
+                        params: {
+                            resourceName: field.resourceName,
+                            resourceId: field.belongsToId,
+                        },
+                    }"
+                    class="no-underline font-bold dim text-primary"
+                >
+                    <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSizeDetail"></vue-q-r-code-component>
+                </router-link>
+                <div class="ml-3" v-show="displayValue">
+                    {{ fieldValue }}
                 </div>
-
-            </router-link>
+            </div>
             <div v-else-if="field.value" class="flex">
                 <div>
                     <vue-q-r-code-component v-if="fieldValue" :text="fieldValue" :size="qrSizeDetail"></vue-q-r-code-component>
