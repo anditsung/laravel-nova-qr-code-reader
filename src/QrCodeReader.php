@@ -22,13 +22,6 @@ class QrCodeReader extends Field implements RelatableField
     public $component = 'qr-code-reader';
 
     /**
-     * The field's relationship status
-     *
-     * @var boolean
-     */
-    public $relationship = false;
-
-    /**
      * The field's resource
      *
      * @var string
@@ -85,7 +78,8 @@ class QrCodeReader extends Field implements RelatableField
     public $qrSizeIndex = 30;
     public $qrSizeDetail = 100;
     public $qrSizeForm = 50;
-    public $displayValue = true;
+    public $displayValue = false;
+    public $relationship = false;
 
     /**
      * Create a new field.
@@ -156,28 +150,29 @@ class QrCodeReader extends Field implements RelatableField
         }
     }
 
-    /**
-     * Get additional meta information to merge with the field payload.
-     *
-     * @return array
-     */
-    public function meta()
-    {
-        if(!$this->relationship) {
-            return array_merge([
-                'viewable' => $this->viewable,
-            ], $this->meta);
-        }
-        return array_merge([
-            'resourceName' => $this->resourceName,
-            'label' => forward_static_call([$this->resourceClass, 'label']),
-            'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
-            'belongsToRelationship' => $this->belongsToRelationship,
-            'belongsToId' => $this->belongsToId,
-            'viewable' => $this->viewable,
-            'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
-        ], $this->meta);
-    }
+
+//    /**
+//     * Get additional meta information to merge with the field payload.
+//     *
+//     * @return array
+//     */
+//    public function meta()
+//    {
+//        if(!$this->relationship) {
+//            return array_merge([
+//                'viewable' => $this->viewable,
+//            ], $this->meta);
+//        }
+//        return array_merge([
+//            'resourceName' => $this->resourceName,
+//            'label' => forward_static_call([$this->resourceClass, 'label']),
+//            'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
+//            'belongsToRelationship' => $this->belongsToRelationship,
+//            'belongsToId' => $this->belongsToId,
+//            'viewable' => $this->viewable,
+//            'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
+//        ], $this->meta);
+//    }
 
     public function canSubmit($canSubmit = true)
     {
@@ -228,13 +223,36 @@ class QrCodeReader extends Field implements RelatableField
      */
     public function jsonSerialize()
     {
-        return array_merge(parent::jsonSerialize(), [
-            'qrSizeIndex' => $this->qrSizeIndex,
-            'qrSizeDetail' => $this->qrSizeDetail,
-            'qrSizeForm' => $this->qrSizeForm,
-            'canSubmit' => $this->canSubmit,
-            'canInput' => $this->canInput,
-            'displayValue' => $this->displayValue,
-        ]);
+        $meta = '';
+
+        if(!$this->relationship) {
+            $meta = [
+                'qrSizeIndex' => $this->qrSizeIndex,
+                'qrSizeDetail' => $this->qrSizeDetail,
+                'qrSizeForm' => $this->qrSizeForm,
+                'canSubmit' => $this->canSubmit,
+                'canInput' => $this->canInput,
+                'displayValue' => $this->displayValue,
+                'viewable' => $this->viewable,
+            ];
+        }
+        else {
+            $meta = [
+                'qrSizeIndex' => $this->qrSizeIndex,
+                'qrSizeDetail' => $this->qrSizeDetail,
+                'qrSizeForm' => $this->qrSizeForm,
+                'canSubmit' => $this->canSubmit,
+                'canInput' => $this->canInput,
+                'displayValue' => $this->displayValue,
+                'resourceName' => $this->resourceName,
+                'label' => forward_static_call([$this->resourceClass, 'label']),
+                'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
+                'belongsToRelationship' => $this->belongsToRelationship,
+                'belongsToId' => $this->belongsToId,
+                'viewable' => $this->viewable,
+                'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
+            ];
+        }
+        return array_merge(parent::jsonSerialize(), $meta);
     }
 }
