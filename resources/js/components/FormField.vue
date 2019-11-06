@@ -15,7 +15,7 @@
                 </div>
                 <button class="btn btn-default btn-primary ml-3" @click.prevent="showModal = true">{{ __('Scan') }}</button>
             </div>
-            <camera-capture-modal :showSubmit="showSubmit" v-if="showModal" @close="showModal = false" @decoded="scanData"></camera-capture-modal>
+            <camera-capture-modal :displayWidth="displayWidth" :showSubmit="showSubmit" v-if="showModal" @close="showModal = false" @decoded="scanData"></camera-capture-modal>
         </template>
     </default-field>
 </template>
@@ -38,6 +38,7 @@
                 showSubmit: this.field.canSubmit,
                 canInput: this.field.canInput,
                 qrSizeForm: this.field.qrSizeForm,
+                displayWidth: this.field.displayWidth,
             }
         },
 

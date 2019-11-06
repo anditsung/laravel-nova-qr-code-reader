@@ -32,7 +32,7 @@
                                 {{ __(this.cameraErrorMessage) }}
                             </div>
                         </span>
-                        <qrcode-stream v-else @init="onInit" @decode="onDecode"></qrcode-stream>
+                        <qrcode-stream v-bind:style="{width: displayWidth}" v-else @init="onInit" @decode="onDecode"></qrcode-stream>
                     </div>
                 </div>
             </div>
@@ -72,7 +72,8 @@
         },
 
         props: [
-            'showSubmit'
+            'showSubmit',
+            'displayWidth'
         ],
 
         data() {

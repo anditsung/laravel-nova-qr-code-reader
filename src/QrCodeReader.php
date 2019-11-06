@@ -80,6 +80,7 @@ class QrCodeReader extends Field implements RelatableField
     public $qrSizeForm = 50;
     public $displayValue = false;
     public $relationship = false;
+    public $displayWidth = "720px";
 
     /**
      * Create a new field.
@@ -150,30 +151,6 @@ class QrCodeReader extends Field implements RelatableField
         }
     }
 
-
-//    /**
-//     * Get additional meta information to merge with the field payload.
-//     *
-//     * @return array
-//     */
-//    public function meta()
-//    {
-//        if(!$this->relationship) {
-//            return array_merge([
-//                'viewable' => $this->viewable,
-//            ], $this->meta);
-//        }
-//        return array_merge([
-//            'resourceName' => $this->resourceName,
-//            'label' => forward_static_call([$this->resourceClass, 'label']),
-//            'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
-//            'belongsToRelationship' => $this->belongsToRelationship,
-//            'belongsToId' => $this->belongsToId,
-//            'viewable' => $this->viewable,
-//            'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
-//        ], $this->meta);
-//    }
-
     public function canSubmit($canSubmit = true)
     {
         $this->canSubmit = $canSubmit;
@@ -223,6 +200,13 @@ class QrCodeReader extends Field implements RelatableField
         return $this;
     }
 
+    public function displayWidth($displayWidth = 720)
+    {
+        $this->displayWidth = $displayWidth . "px";
+
+        return $this;
+    }
+
     /**
      * Prepare the field for JSON serialization.
      *
@@ -241,6 +225,7 @@ class QrCodeReader extends Field implements RelatableField
                 'canInput' => $this->canInput,
                 'displayValue' => $this->displayValue,
                 'viewable' => $this->viewable,
+                'displayWidth' => $this->displayWidth,
             ];
         }
         else {
@@ -257,6 +242,7 @@ class QrCodeReader extends Field implements RelatableField
                 'belongsToRelationship' => $this->belongsToRelationship,
                 'belongsToId' => $this->belongsToId,
                 'viewable' => $this->viewable,
+                'displayWidth' => $this->displayWidth,
                 'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
             ];
         }

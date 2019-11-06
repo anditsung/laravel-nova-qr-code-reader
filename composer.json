@@ -5,6 +5,7 @@
         "laravel",
         "nova"
     ],
+    "type": "library",
     "authors": [
         {
             "name": "AndiTsung",
