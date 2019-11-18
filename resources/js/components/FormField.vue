@@ -11,6 +11,7 @@
                         :class="errorClasses"
                         :placeholder="field.name"
                         v-model="value"
+                        :disabled="isReadonly"
                     />
                 </div>
                 <button class="btn btn-default btn-primary ml-3" @click.prevent="showModal = true">{{ __('Scan') }}</button>

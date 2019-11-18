@@ -214,37 +214,27 @@ class QrCodeReader extends Field implements RelatableField
      */
     public function jsonSerialize()
     {
-        $meta = '';
+        $meta = [
+            'qrSizeIndex' => $this->qrSizeIndex,
+            'qrSizeDetail' => $this->qrSizeDetail,
+            'qrSizeForm' => $this->qrSizeForm,
+            'canSubmit' => $this->canSubmit,
+            'canInput' => $this->canInput,
+            'displayValue' => $this->displayValue,
+            'viewable' => $this->viewable,
+            'displayWidth' => $this->displayWidth,
+        ];
 
-        if(!$this->relationship) {
-            $meta = [
-                'qrSizeIndex' => $this->qrSizeIndex,
-                'qrSizeDetail' => $this->qrSizeDetail,
-                'qrSizeForm' => $this->qrSizeForm,
-                'canSubmit' => $this->canSubmit,
-                'canInput' => $this->canInput,
-                'displayValue' => $this->displayValue,
-                'viewable' => $this->viewable,
-                'displayWidth' => $this->displayWidth,
-            ];
-        }
-        else {
-            $meta = [
-                'qrSizeIndex' => $this->qrSizeIndex,
-                'qrSizeDetail' => $this->qrSizeDetail,
-                'qrSizeForm' => $this->qrSizeForm,
-                'canSubmit' => $this->canSubmit,
-                'canInput' => $this->canInput,
-                'displayValue' => $this->displayValue,
+        if($this->relationship) {
+            $relationshipMeta = [
                 'resourceName' => $this->resourceName,
                 'label' => forward_static_call([$this->resourceClass, 'label']),
                 'singularLabel' => $this->singularLabel ?? $this->name ?? forward_static_call([$this->resourceClass, 'singularLabel']),
                 'belongsToRelationship' => $this->belongsToRelationship,
                 'belongsToId' => $this->belongsToId,
-                'viewable' => $this->viewable,
-                'displayWidth' => $this->displayWidth,
                 'reverse' => $this->isReverseRelation(app(NovaRequest::class)),
             ];
+            array_merge($meta, $relationshipMeta);
         }
         return array_merge(parent::jsonSerialize(), $meta);
     }
