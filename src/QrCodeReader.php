@@ -95,7 +95,6 @@ class QrCodeReader extends Field implements RelatableField
 
         $resource = $resource ?? ResourceRelationshipGuesser::guessResource($name);
         if(class_exists($resource)) {
-            \Debugbar::info("RELATION");
             $this->resourceClass = $resource;
             $this->resourceName = $resource::uriKey();
             $this->belongsToRelationship = $this->attribute;
@@ -115,8 +114,6 @@ class QrCodeReader extends Field implements RelatableField
     {
         $value = null;
 
-        \Debugbar::info("HELLO");
-
         if($this->relationship) {
             if ($resource->relationLoaded($this->attribute)) {
                 $value = $resource->getRelation($this->attribute);
@@ -125,8 +122,6 @@ class QrCodeReader extends Field implements RelatableField
             if (! $value) {
                 // bikin relation dari column yang disave
                 // tidak boleh diganti karena akan digunakan untuk penyimpanan data
-
-                \Debugbar::info($this->attribute);
 
                 $index = strpos($this->attribute, '_id');
                 if($index > 0) {
