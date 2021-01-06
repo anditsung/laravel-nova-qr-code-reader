@@ -1,0 +1,14 @@
+{
+    "Scan QR Code": "Scan QR Code",
+    "Cancel": "Cancel",
+    "Submit": "Submit",
+    "User denied camera access permissions": "User denied camera access permissions",
+    "No suitable camera device installed": "No suitable camera device installed",
+    "Page is not served over HTTPS (or localhost)": "Page is not served over HTTPS (or localhost)",
+    "Maybe camera is already in use":"Maybe camera is already in use",
+    "Did you requested the front camera although there is none?": "Did you requested the front camera although there is none?",
+    "Browser seems to be lacking features":"Browser seems to be lacking features",
+    "Unknown Error": "Unknown Error",
+    "Please scan code before submitting!": "Please scan code before submitting!",
+    "Scan": "Scan"
+}
