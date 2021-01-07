@@ -20,6 +20,15 @@ using github repository add this on composer.json
 ],
 ```
 
+## Configuration
+
+### Localization
+publish lang files
+```
+php artisan vendor:publish --tag=qr-code-reader-lang
+```
+make a copy of `resources/lang/vendor/qr-code-reader/en.json` for each locale
+
 ## Usage
 
 ```
