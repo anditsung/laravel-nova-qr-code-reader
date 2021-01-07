@@ -80,7 +80,7 @@ class QrCodeReader extends Field implements RelatableField
     public $qrSizeForm = 50;
     public $displayValue = false;
     public $relationship = false;
-    public $displayWidth = "720px";
+    public $displayWidth = "auto";
 
     /**
      * Create a new field.
@@ -200,9 +200,13 @@ class QrCodeReader extends Field implements RelatableField
         return $this;
     }
 
-    public function displayWidth($displayWidth = 720)
+    /**
+     * @param  string  $displayWidth
+     * @return $this
+     */
+    public function displayWidth(string $displayWidth)
     {
-        $this->displayWidth = $displayWidth . "px";
+        $this->displayWidth = $displayWidth;
 
         return $this;
     }
