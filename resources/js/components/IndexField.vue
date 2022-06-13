@@ -11,28 +11,49 @@
                 }"
                 class="no-underline dim text-primary font-bold"
             >
-                <vue-q-r-code-component v-if="field.value" :text="field.value" :size="qrSizeIndex"></vue-q-r-code-component>
+                <QRCodeVue3 :value="field.value"
+                            :dots-options="dotsOptions"
+                            :corners-square-options="cornersSquareOptions"
+                            :corners-dot-options="cornersDotOptions"
+                            :height="field.qrSizeIndex"
+                            :width="field.qrSizeIndex"
+                />
             </router-link>
         </span>
         <span v-else-if="field.value">
-            <vue-q-r-code-component v-if="field.value" :text="field.value" :size="qrSizeIndex"></vue-q-r-code-component>
+            <QRCodeVue3 :value="field.value"
+                        :dots-options="dotsOptions"
+                        :corners-square-options="cornersSquareOptions"
+                        :corners-dot-options="cornersDotOptions"
+                        :height="field.qrSizeIndex"
+                        :width="field.qrSizeIndex"
+            />
         </span>
         <span v-else>&mdash;</span>
     </span>
 </template>
 
 <script>
-    import VueQRCodeComponent from 'vue-qrcode-component'
+import QRCodeVue3 from "qrcode-vue3"
 
-    export default {
-        components: { VueQRCodeComponent },
+export default {
 
-        props: ['resourceName', 'field'],
+    props: ['resourceName', 'field'],
 
-        data() {
-            return {
-                qrSizeIndex: this.field.qrSizeIndex
-            }
+    components: {
+        QRCodeVue3,
+    },
+
+    data: () => ({
+        dotsOptions: {
+            type: 'square',
         },
-    }
+        cornersSquareOptions: {
+            type: 'square'
+        },
+        cornersDotOptions: {
+            type: 'square'
+        }
+    }),
+}
 </script>

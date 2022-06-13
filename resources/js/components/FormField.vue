@@ -1,8 +1,18 @@
 <template>
-    <default-field :field="field" :errors="errors">
-        <template slot="field">
-            <div class="flex">
-                <vue-q-r-code-component v-if="!canInput" v-show="value" :text="value" :size="qrSizeForm"></vue-q-r-code-component>
+    <DefaultField :field="field" :errors="errors">
+        <template #field>
+            <div class="flex items-top">
+                <div v-if="! field.canInput">
+                    <QRCodeVue3
+                        :value="field.value"
+                        :dots-options="dotsOptions"
+                        :corners-square-options="cornersSquareOptions"
+                        :corners-dot-options="cornersDotOptions"
+                        :height="field.qrSizeForm"
+                        :width="field.qrSizeForm"
+                    />
+                    <span class="ml-1" v-if="field.displayValue">{{ field.value }}</span>
+                </div>
                 <div v-else>
                     <input
                         :id="field.name"
@@ -14,61 +24,79 @@
                         :disabled="isReadonly"
                     />
                 </div>
-                <button class="btn btn-default btn-primary ml-3" @click.prevent="showModal = true">{{ __('Scan') }}</button>
+                <DefaultButton
+                    class="ml-3"
+                    @click.prevent="showModal = true"
+                >
+                    {{ __('Scan') }}
+                </DefaultButton>
             </div>
-            <camera-capture-modal :displayWidth="displayWidth" :showSubmit="showSubmit" v-if="showModal" @close="showModal = false" @decoded="scanData"></camera-capture-modal>
+            <camera-capture-modal
+                :show="showModal"
+                :canSubmit="field.canSubmit"
+                :displayWidth="field.displayWidth"
+                @close="showModal = false"
+                @decoded="scanData"
+            />
         </template>
-    </default-field>
+    </DefaultField>
 </template>
 
 <script>
-    import CameraCaptureModal from "./CameraCaptureModal"
-    import VueQRCodeComponent from 'vue-qrcode-component'
-    import { FormField, HandlesValidationErrors } from 'laravel-nova'
+import QRCodeVue3 from "qrcode-vue3"
+import CameraCaptureModal from "./CameraCaptureModal"
+import { FormField, HandlesValidationErrors } from 'laravel-nova'
 
-    export default {
-        components: { CameraCaptureModal, VueQRCodeComponent },
+export default {
+    components: { QRCodeVue3, CameraCaptureModal },
 
-        mixins: [FormField, HandlesValidationErrors],
+    mixins: [FormField, HandlesValidationErrors],
 
-        props: ['resourceName', 'resourceId', 'field'],
+    props: ['resourceName', 'resourceId', 'field'],
 
-        data() {
-            return {
-                showModal: false,
-                showSubmit: this.field.canSubmit,
-                canInput: this.field.canInput,
-                qrSizeForm: this.field.qrSizeForm,
-                displayWidth: this.field.displayWidth,
+    data() {
+        return {
+            showModal: false,
+
+            dotsOptions: {
+                type: 'square',
+            },
+            cornersSquareOptions: {
+                type: 'square'
+            },
+            cornersDotOptions: {
+                type: 'square'
             }
+        }
+    },
+
+    methods: {
+        scanData(decodedString) {
+            this.showModal = false
+            this.value = decodedString
         },
 
-        methods: {
-            scanData(decodedString) {
-                this.showModal = false
-                this.value = decodedString
-            },
-
-            /*
-             * Set the initial, internal value for the field.
-             */
-            setInitialValue() {
-                this.value = this.field.value || ''
-            },
-
-            /**
-             * Fill the given FormData object with the field's internal value.
-             */
-            fill(formData) {
-                formData.append(this.field.attribute, this.value || '')
-            },
-
-            /**
-             * Update the field's internal value.
-             */
-            handleChange(value) {
-                this.value = value
-            },
+        /*
+         * Set the initial, internal value for the field.
+         */
+        setInitialValue() {
+            this.value = this.field.value || ''
         },
-    }
+
+        /**
+         * Fill the given FormData object with the field's internal value.
+         */
+        fill(formData) {
+            formData.append(this.field.attribute, this.value || '')
+        },
+
+        /**
+         * Update the field's internal value.
+         */
+        handleChange(value) {
+            this.value = value
+        },
+    },
+
+}
 </script>

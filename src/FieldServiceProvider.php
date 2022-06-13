@@ -26,7 +26,6 @@ class FieldServiceProvider extends ServiceProvider
 
         Nova::serving(function (ServingNova $event) {
             Nova::script('qr-code-reader', __DIR__.'/../dist/js/field.js');
-            Nova::style('qr-code-reader', __DIR__.'/../dist/css/field.css');
 
             Nova::translations(
                 App::resourcePath('lang/vendor/qr-code-reader/'.app()->getLocale().'.json')

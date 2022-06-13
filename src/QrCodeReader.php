@@ -94,6 +94,7 @@ class QrCodeReader extends Field implements RelatableField
         parent::__construct($name, $attribute);
 
         $resource = $resource ?? ResourceRelationshipGuesser::guessResource($name);
+
         if(class_exists($resource)) {
             $this->resourceClass = $resource;
             $this->resourceName = $resource::uriKey();
@@ -122,14 +123,8 @@ class QrCodeReader extends Field implements RelatableField
             if (! $value) {
                 // bikin relation dari column yang disave
                 // tidak boleh diganti karena akan digunakan untuk penyimpanan data
+                $relationshipName = $this->getRelationshipName();
 
-                $index = strpos($this->attribute, '_id');
-                if($index > 0) {
-                    $relationshipName = substr($this->attribute, 0, $index);
-                }
-                else {
-                    $relationshipName = $this->attribute;
-                }
                 $value = $resource->{$relationshipName}()->withoutGlobalScopes()->getResults();
             }
 
@@ -149,6 +144,18 @@ class QrCodeReader extends Field implements RelatableField
                 $this->viewable = false;
             }
         }
+    }
+
+    public function getRelationshipName()
+    {
+        $index = strpos($this->attribute, '_id');
+        if($index > 0) {
+            $relationshipName = substr($this->attribute, 0, $index);
+        }
+        else {
+            $relationshipName = $this->attribute;
+        }
+        return $relationshipName;
     }
 
     public function canSubmit($canSubmit = true)
@@ -216,7 +223,7 @@ class QrCodeReader extends Field implements RelatableField
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $meta = [
             'qrSizeIndex' => $this->qrSizeIndex,
@@ -241,5 +248,15 @@ class QrCodeReader extends Field implements RelatableField
             $meta = array_merge($meta, $relationshipMeta);
         }
         return array_merge(parent::jsonSerialize(), $meta);
+    }
+
+    public function relationshipName()
+    {
+        return $this->belongsToRelationship;
+    }
+
+    public function relationshipType()
+    {
+        return 'belongsTo';
     }
 }
